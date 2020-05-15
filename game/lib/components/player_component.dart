@@ -18,11 +18,18 @@ class PlayerComponent extends AnimationComponent with HasGameRef<SpaceShooterGam
     x = 100;
     y = 500;
 
-    bulletCreator = Timer(0.5, repeat: true, callback: _createBullet);
+    bulletCreator = Timer(0.05, repeat: true, callback: _createBullet);
   }
 
   void _createBullet() {
-    gameRef.add(BulletComponent(x + 20, y + 20));
+    final bulletX = x + 20;
+    final bulletY = y + 20;
+
+    gameRef.add(BulletComponent(bulletX, bulletY));
+    gameRef.add(BulletComponent(bulletX, bulletY, xDirection: 0.5));
+    gameRef.add(BulletComponent(bulletX, bulletY, xDirection: 0.3));
+    gameRef.add(BulletComponent(bulletX, bulletY, xDirection: -0.5));
+    gameRef.add(BulletComponent(bulletX, bulletY, xDirection: -0.3));
   }
 
   void beginFire() {
@@ -47,8 +54,6 @@ class PlayerComponent extends AnimationComponent with HasGameRef<SpaceShooterGam
 
   void takeHit() {
     gameRef.add(ExplosionComponent(x, y));
-
-    destroyed = true;
   }
 
   @override

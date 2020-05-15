@@ -9,7 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flame: ^0.19.1-beta
+  flame:
+    path: ../../flame
 
 dev_dependencies:
   flutter_test:

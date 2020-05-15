@@ -10,7 +10,9 @@ class BulletComponent extends AnimationComponent with HasGameRef<SpaceShooterGam
 
   bool destroyed = false;
 
-  BulletComponent(double x, double y): super(10, 20, Animation.sequenced("bullet.png", 4, textureWidth: 8, textureHeight: 16)) {
+  double xDirection;
+
+  BulletComponent(double x, double y, { this.xDirection = 0.0 }): super(10, 20, Animation.sequenced("bullet.png", 4, textureWidth: 8, textureHeight: 16)) {
       this.x = x;
       this.y = y;
     }
@@ -20,6 +22,9 @@ class BulletComponent extends AnimationComponent with HasGameRef<SpaceShooterGam
     super.update(dt);
    
     y += bullet_speed * dt;
+    if (xDirection != 0) {
+      x += bullet_speed * dt * xDirection;
+    }
 
     gameRef.components
         .whereType<EnemyComponent>()

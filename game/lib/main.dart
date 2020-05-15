@@ -3,7 +3,6 @@ import 'package:flame/flame.dart';
 import 'package:flutter/foundation.dart';
 
 import './game.dart';
-import './audio.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

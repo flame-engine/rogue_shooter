@@ -2,6 +2,8 @@ import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flame/time.dart';
 import 'package:flame/components/timer_component.dart';
+import 'package:flame/text_config.dart';
+import 'package:flame/position.dart';
 import 'package:flutter/material.dart';
 
 import './components/player_component.dart';
@@ -18,6 +20,8 @@ class SpaceShooterGame extends BaseGame with PanDetector {
   int score = 0;
   bool _musicStarted = false;
 
+  final debugTextconfig = const TextConfig(color: const Color(0xFFFFFFFF));
+
   SpaceShooterGame(Size size) {
     this.size = size;
     _initPlayer();
@@ -31,6 +35,17 @@ class SpaceShooterGame extends BaseGame with PanDetector {
 
   void _initPlayer() {
     add(player = PlayerComponent());
+  }
+
+  @override
+  bool recordFps() => true;
+
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+
+    debugTextconfig.render(canvas, fps(120).toString(), Position(0, 50));
+    debugTextconfig.render(canvas, 'Objects: ${components.length}', Position(0, 100));
   }
 
   @override
@@ -63,16 +78,6 @@ class SpaceShooterGame extends BaseGame with PanDetector {
 
   void playerTakeHit() {
     player.takeHit();
-
-    player = null;
-
     score = 0;
-
-    add(
-        TimerComponent(
-            Timer(1, callback: _initPlayer)
-            ..start()
-        )
-    );
   }
 }

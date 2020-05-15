@@ -1,11 +1,17 @@
 import 'package:flame/flame.dart';
 
 class Audio {
+  static bool audioEnabled = false;
+
   static void explosion() {
-    Flame.audio.play('small-explosion.wav');
+    if (audioEnabled) {
+      Flame.audio.play('small-explosion.wav');
+    }
   }
 
   static void backgroundMusic() {
-    Flame.audio.loopLongAudio('space-idea.mp3');
+    if (audioEnabled) {
+      Flame.audio.loopLongAudio('space-idea.mp3');
+    }
   }
 }
