@@ -1,5 +1,8 @@
-# Rogue Shooter
+# Flame Perfomance Test Game
 
-Rogue Shooter is a simple game, made for teaching purposes, it is been built on a live stream.
+Simple scrolling shooter game used for perfomance test with Flame, originally forked from https://github.com/fireslime/rogue_shooter
 
-You can play the web version here: https://fireslime.xyz/rogue_shooter
+Watch the test here:
+[![Flame Perfomance Test Game](https://img.youtube.com/vi/4x4kEFolQa4/0.jpg)](https://www.youtube.com/watch?v=4x4kEFolQa4 "Flame Perfomance Test Game")
+
+Video recorded on the app running in release mode on a Moto Z2 Play
