@@ -20,7 +20,7 @@ class SpaceShooterGame extends BaseGame with PanDetector {
   int score = 0;
   bool _musicStarted = false;
 
-  final debugTextconfig = const TextConfig(color: const Color(0xFFFFFFFF));
+  final debugTextconfig = TextConfig(color: Color(0xFFFFFFFF));
 
   SpaceShooterGame(Size size) {
     this.size = size;
