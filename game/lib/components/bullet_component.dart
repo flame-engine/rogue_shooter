@@ -4,7 +4,7 @@ import 'package:flame/geometry.dart';
 import '../game.dart';
 import './enemy_component.dart';
 
-class BulletComponent extends SpriteAnimationComponent with HasGameRef<SpaceShooterGame>, Hitbox, Collidable {
+class BulletComponent extends SpriteAnimationComponent with HasGameRef<SpaceShooterGame> {
   static const bullet_speed = -500;
 
   bool destroyed = false;
@@ -14,10 +14,7 @@ class BulletComponent extends SpriteAnimationComponent with HasGameRef<SpaceShoo
   BulletComponent(double x, double y, { this.xDirection = 0.0 }): super(
       position: Vector2(x, y),
       size: Vector2(10, 20),
-  ) {
-    addShape(HitboxRectangle());
-  }
-
+  );
   @override
   Future<void> onLoad() async {
     animation = await gameRef.loadSpriteAnimation('bullet.png', SpriteAnimationData.sequenced(
@@ -27,18 +24,11 @@ class BulletComponent extends SpriteAnimationComponent with HasGameRef<SpaceShoo
     ));
   }
 
-  @override
-  void onCollision(Set<Vector2> points, Collidable other) {
-    if (other is EnemyComponent) {
-      destroyed = true;
-      other.takeHit();
-    }
-  }
 
   @override
   void update(double dt) {
     super.update(dt);
-   
+
     y += bullet_speed * dt;
     if (xDirection != 0) {
       x += bullet_speed * dt * xDirection;

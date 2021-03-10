@@ -6,15 +6,13 @@ import '../game.dart';
 
 import './explosion_component.dart';
 
-class EnemyComponent extends SpriteAnimationComponent with HasGameRef<SpaceShooterGame>, Hitbox, Collidable {
+class EnemyComponent extends SpriteAnimationComponent with HasGameRef<SpaceShooterGame> {
 
   static const enemy_speed = 150;
 
   bool destroyed = false;
 
-  EnemyComponent(double x, double y): super(position: Vector2(x, y), size: Vector2.all(25)) {
-    addShape(HitboxRectangle());
-  }
+  EnemyComponent(double x, double y): super(position: Vector2(x, y), size: Vector2.all(25));
 
   @override
   Future<void> onLoad() async {
@@ -35,15 +33,6 @@ class EnemyComponent extends SpriteAnimationComponent with HasGameRef<SpaceShoot
     y += enemy_speed * dt;
     shouldRemove = destroyed || y >= gameRef.size.y;
   }
-
-  @override
-    void onCollision(Set<Vector2> points, Collidable other) {
-      if (other is PlayerComponent) {
-        takeHit();
-
-        gameRef.playerTakeHit();
-      }
-    }
 
   void takeHit() {
     destroyed = true;

@@ -8,7 +8,7 @@ import './components/enemy_creator.dart';
 import './components/star_background_creator.dart';
 import './components/score_component.dart';
 
-class SpaceShooterGame extends BaseGame with PanDetector, HasCollidables {
+class SpaceShooterGame extends BaseGame with PanDetector {
 
   PlayerComponent player;
 
