@@ -38,7 +38,7 @@ class BulletComponent extends SpriteAnimationComponent with HasGameRef<SpaceShoo
   @override
   void update(double dt) {
     super.update(dt);
-   
+
     y += bullet_speed * dt;
     if (xDirection != 0) {
       x += bullet_speed * dt * xDirection;

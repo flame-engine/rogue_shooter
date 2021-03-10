@@ -13,7 +13,7 @@ class ExplosionComponent extends SpriteAnimationComponent with HasGameRef<SpaceS
   @override
   Future<void> onLoad() async {
     animation = await gameRef.loadSpriteAnimation('explosion.png', SpriteAnimationData.sequenced(
-      stepTime: 0.5,
+      stepTime: 0.1,
       amount: 6,
       textureSize: Vector2.all(32),
     ));

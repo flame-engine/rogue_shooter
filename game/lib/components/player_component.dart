@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame/geometry.dart';
 
 import 'package:flame/timer.dart';
+import 'package:rogue_shooter/components/enemy_component.dart';
 
 import '../game.dart';
 
@@ -64,4 +65,12 @@ class PlayerComponent extends SpriteAnimationComponent with HasGameRef<SpaceShoo
   void takeHit() {
     gameRef.add(ExplosionComponent(x, y));
   }
+
+  @override
+    void onCollision(Set<Vector2> points, Collidable other) {
+      if (other is EnemyComponent) {
+        takeHit();
+        other.takeHit();
+      }
+    }
 }

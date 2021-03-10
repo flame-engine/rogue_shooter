@@ -1,6 +1,5 @@
 import 'package:flame/components.dart';
 import 'package:flame/geometry.dart';
-import 'package:rogue_shooter/components/player_component.dart';
 
 import '../game.dart';
 
@@ -14,6 +13,7 @@ class EnemyComponent extends SpriteAnimationComponent with HasGameRef<SpaceShoot
 
   EnemyComponent(double x, double y): super(position: Vector2(x, y), size: Vector2.all(25)) {
     addShape(HitboxRectangle());
+    collidableType = CollidableType.passive;
   }
 
   @override
@@ -26,6 +26,7 @@ class EnemyComponent extends SpriteAnimationComponent with HasGameRef<SpaceShoot
             textureSize: Vector2.all(16),
         ),
     );
+    collidableType = CollidableType.passive;
   }
 
   @override
@@ -36,14 +37,6 @@ class EnemyComponent extends SpriteAnimationComponent with HasGameRef<SpaceShoot
     shouldRemove = destroyed || y >= gameRef.size.y;
   }
 
-  @override
-    void onCollision(Set<Vector2> points, Collidable other) {
-      if (other is PlayerComponent) {
-        takeHit();
-
-        gameRef.playerTakeHit();
-      }
-    }
 
   void takeHit() {
     destroyed = true;
