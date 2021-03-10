@@ -1,19 +1,22 @@
-import 'package:flame/components/animation_component.dart';
-import 'package:flame/animation.dart';
+import 'package:flame/components.dart';
 
-import '../audio.dart';
+import '../game.dart';
 
-class ExplosionComponent extends AnimationComponent {
+class ExplosionComponent extends SpriteAnimationComponent with HasGameRef<SpaceShooterGame> {
 
   ExplosionComponent(double x, double y): super(
-      50,
-      50,
-      Animation.sequenced("explosion.png", 6, textureWidth: 32, textureHeight: 32, stepTime: 0.05),
-      destroyOnFinish: true
-  ) {
-      Audio.explosion();
-      this.x = x;
-      this.y = y;
-    }
+      position: Vector2(x, y),
+      size: Vector2.all(50),
+      removeOnFinish: true,
+  );
+
+  @override
+  Future<void> onLoad() async {
+    animation = await gameRef.loadSpriteAnimation('explosion.png', SpriteAnimationData.sequenced(
+      stepTime: 0.5,
+      amount: 6,
+      textureSize: Vector2.all(32),
+    ));
+  }
 }
 

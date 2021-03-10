@@ -1,21 +1,39 @@
-import 'package:flame/components/animation_component.dart';
-import 'package:flame/animation.dart';
-import 'package:flame/components/mixins/has_game_ref.dart';
+import 'package:flame/components.dart';
+import 'package:flame/geometry.dart';
 
 import '../game.dart';
 import './enemy_component.dart';
 
-class BulletComponent extends AnimationComponent with HasGameRef<SpaceShooterGame>{
+class BulletComponent extends SpriteAnimationComponent with HasGameRef<SpaceShooterGame>, Hitbox, Collidable {
   static const bullet_speed = -500;
 
   bool destroyed = false;
 
   double xDirection;
 
-  BulletComponent(double x, double y, { this.xDirection = 0.0 }): super(10, 20, Animation.sequenced("bullet.png", 4, textureWidth: 8, textureHeight: 16)) {
-      this.x = x;
-      this.y = y;
+  BulletComponent(double x, double y, { this.xDirection = 0.0 }): super(
+      position: Vector2(x, y),
+      size: Vector2(10, 20),
+  ) {
+    addShape(HitboxRectangle());
+  }
+
+  @override
+  Future<void> onLoad() async {
+    animation = await gameRef.loadSpriteAnimation('bullet.png', SpriteAnimationData.sequenced(
+      stepTime: 0.2,
+      amount: 4,
+      textureSize: Vector2(8, 16),
+    ));
+  }
+
+  @override
+  void onCollision(Set<Vector2> points, Collidable other) {
+    if (other is EnemyComponent) {
+      destroyed = true;
+      other.takeHit();
     }
+  }
 
   @override
   void update(double dt) {
@@ -26,17 +44,6 @@ class BulletComponent extends AnimationComponent with HasGameRef<SpaceShooterGam
       x += bullet_speed * dt * xDirection;
     }
 
-    gameRef.components
-        .whereType<EnemyComponent>()
-        .forEach((enemy) {
-          if (enemy.toRect().overlaps(toRect())) {
-            destroyed = true;
-
-            enemy.takeHit();
-          }
-        });
+    shouldRemove =  destroyed || toRect().bottom <= 0;
   }
-
-  @override
-  bool destroy() => destroyed || toRect().bottom <= 0;
 }

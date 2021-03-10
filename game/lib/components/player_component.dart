@@ -1,24 +1,31 @@
-import 'package:flame/components/animation_component.dart';
-import 'package:flame/animation.dart';
-import 'package:flame/time.dart';
+import 'package:flame/components.dart';
+import 'package:flame/geometry.dart';
 
-import 'package:flame/components/mixins/has_game_ref.dart';
+import 'package:flame/timer.dart';
 
 import '../game.dart';
 
 import './bullet_component.dart';
 import './explosion_component.dart';
 
-class PlayerComponent extends AnimationComponent with HasGameRef<SpaceShooterGame> {
+class PlayerComponent extends SpriteAnimationComponent with HasGameRef<SpaceShooterGame>, Hitbox, Collidable {
 
   bool destroyed = false;
   Timer bulletCreator;
 
-  PlayerComponent(): super(50, 75, Animation.sequenced("player.png", 4, textureWidth: 32, textureHeight: 48)) {
-    x = 100;
-    y = 500;
-
+  PlayerComponent(): super(size: Vector2(50, 75), position: Vector2(100, 500)) {
     bulletCreator = Timer(0.05, repeat: true, callback: _createBullet);
+
+    addShape(HitboxRectangle());
+  }
+
+  @override
+  Future<void> onLoad() async {
+    animation = await gameRef.loadSpriteAnimation('player.png', SpriteAnimationData.sequenced(
+            stepTime: 0.2,
+            amount:  4,
+            textureSize: Vector2(32, 48),
+    ));
   }
 
   void _createBullet() {
@@ -50,12 +57,11 @@ class PlayerComponent extends AnimationComponent with HasGameRef<SpaceShooterGam
     super.update(dt);
 
     bulletCreator.update(dt);
+
+    shouldRemove = destroyed;
   }
 
   void takeHit() {
     gameRef.add(ExplosionComponent(x, y));
   }
-
-  @override
-  bool destroy() => destroyed;
 }

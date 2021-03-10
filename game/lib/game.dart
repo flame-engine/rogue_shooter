@@ -1,59 +1,41 @@
+import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
-import 'package:flame/time.dart';
-import 'package:flame/components/timer_component.dart';
-import 'package:flame/text_config.dart';
-import 'package:flame/position.dart';
 import 'package:flutter/material.dart';
 
 import './components/player_component.dart';
 import './components/enemy_creator.dart';
 import './components/star_background_creator.dart';
 import './components/score_component.dart';
-import './audio.dart';
 
-class SpaceShooterGame extends BaseGame with PanDetector {
+class SpaceShooterGame extends BaseGame with PanDetector, HasCollidables {
 
   PlayerComponent player;
-  StarBackGroundCreator starBackGroundCreator;
 
   int score = 0;
-  bool _musicStarted = false;
 
   final debugTextconfig = TextConfig(color: Color(0xFFFFFFFF));
 
-  SpaceShooterGame(Size size) {
-    this.size = size;
-    _initPlayer();
+  @override
+  Future<void> onLoad() async {
+    add(player = PlayerComponent());
 
     add(EnemyCreator());
-    add(starBackGroundCreator = StarBackGroundCreator(size));
-    starBackGroundCreator.init();
+    add(StarBackGroundCreator());
 
     add(ScoreComponent());
   }
-
-  void _initPlayer() {
-    add(player = PlayerComponent());
-  }
-
-  @override
-  bool recordFps() => true;
 
   @override
   void render(Canvas canvas) {
     super.render(canvas);
 
-    debugTextconfig.render(canvas, fps(120).toString(), Position(0, 50));
-    debugTextconfig.render(canvas, 'Objects: ${components.length}', Position(0, 100));
+    debugTextconfig.render(canvas, fps(120).toString(), Vector2(0, 50));
+    debugTextconfig.render(canvas, 'Objects: ${components.length}', Vector2(0, 100));
   }
 
   @override
   void onPanStart(_) {
-    if (!_musicStarted) {
-      _musicStarted = true;
-      Audio.backgroundMusic();
-    }
     player?.beginFire();
   }
 

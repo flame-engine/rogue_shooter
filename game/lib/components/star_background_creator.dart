@@ -1,7 +1,6 @@
-import 'package:flame/components/component.dart';
-import 'package:flame/components/mixins/has_game_ref.dart';
-import 'package:flame/time.dart';
-import 'package:flame/spritesheet.dart';
+import 'package:flame/components.dart';
+import 'package:flame/timer.dart';
+import 'package:flame/sprite.dart';
 
 import 'dart:ui';
 import 'dart:math';
@@ -17,20 +16,17 @@ class StarBackGroundCreator extends Component with HasGameRef<SpaceShooterGame>{
   SpriteSheet starsSpritesheet;
   Random random = Random();
 
-  Size screenSize;
+  StarBackGroundCreator();
 
-  StarBackGroundCreator(this.screenSize);
-
-  void init() {
-    starsSpritesheet = SpriteSheet(
-        imageName: "stars.png",
-        textureWidth: 9,
-        textureHeight: 9,
+  @override
+  Future<void> onLoad() async {
+    starsSpritesheet = SpriteSheet.fromColumnsAndRows(
+        image: await gameRef.images.load("stars.png"),
         rows: 4,
         columns: 4
     );
 
-    final starGapTime = (screenSize.height / gapSize) / star_speed;
+    final starGapTime = (gameRef.size.y / gapSize) / star_speed;
 
     starCreator = Timer(starGapTime, repeat: true, callback: () {
       _createRowOfStars(0);
@@ -41,7 +37,7 @@ class StarBackGroundCreator extends Component with HasGameRef<SpaceShooterGame>{
   }
 
   void _createStarAt(double x, double y) {
-    final animation = starsSpritesheet.createAnimation(random.nextInt(3), to: 4)
+    final animation = starsSpritesheet.createAnimation(row: random.nextInt(3), to: 4, stepTime: 0.1)
         ..variableStepTimes = [
           max(20, 100 * random.nextDouble()),
           0.1, 0.1, 0.1
@@ -51,7 +47,7 @@ class StarBackGroundCreator extends Component with HasGameRef<SpaceShooterGame>{
   }
   _createRowOfStars(double y) {
     final gapSize = 6;
-    double starGap = screenSize.width / gapSize;
+    double starGap = gameRef.size.x / gapSize;
 
     for (var i = 0; i < gapSize; i++) {
       _createStarAt(
@@ -62,7 +58,7 @@ class StarBackGroundCreator extends Component with HasGameRef<SpaceShooterGame>{
   }
 
   void _createInitialStars() {
-    double rows = screenSize.height / gapSize;
+    double rows = gameRef.size.y / gapSize;
 
     for (var i = 0; i < gapSize;  i++) {
       _createRowOfStars(i * rows);

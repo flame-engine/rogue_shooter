@@ -1,6 +1,5 @@
-import 'package:flame/components/component.dart';
-import 'package:flame/components/mixins/has_game_ref.dart';
-import 'package:flame/time.dart';
+import 'package:flame/components.dart';
+import 'package:flame/timer.dart';
 
 import 'dart:ui';
 import 'dart:math';
@@ -17,11 +16,11 @@ class EnemyCreator extends Component with HasGameRef<SpaceShooterGame>{
 
   EnemyCreator() {
     enemyCreator = Timer(0.05, repeat: true, callback: () {
-      gameRef.add(EnemyComponent((gameRef.size.width - 25) * random.nextDouble(), 0));
-      gameRef.add(EnemyComponent((gameRef.size.width - 25) * random.nextDouble(), 0));
-      gameRef.add(EnemyComponent((gameRef.size.width - 25) * random.nextDouble(), 0));
-      gameRef.add(EnemyComponent((gameRef.size.width - 25) * random.nextDouble(), 0));
-      gameRef.add(EnemyComponent((gameRef.size.width - 25) * random.nextDouble(), 0));
+      gameRef.add(EnemyComponent((gameRef.size.x - 25) * random.nextDouble(), 0));
+      gameRef.add(EnemyComponent((gameRef.size.x - 25) * random.nextDouble(), 0));
+      gameRef.add(EnemyComponent((gameRef.size.x - 25) * random.nextDouble(), 0));
+      gameRef.add(EnemyComponent((gameRef.size.x - 25) * random.nextDouble(), 0));
+      gameRef.add(EnemyComponent((gameRef.size.x - 25) * random.nextDouble(), 0));
     });
     enemyCreator.start();
   }
