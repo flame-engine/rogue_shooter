@@ -60,7 +60,7 @@ packages:
   flame:
     dependency: "direct main"
     description:
-      path: "../../flame"
+      path: "../../flame/packages/flame"
       relative: true
     source: path
     version: "1.0.0-rc7-nullsafety.0"
