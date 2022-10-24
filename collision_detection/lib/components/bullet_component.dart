@@ -1,49 +1,55 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/geometry.dart';
 
-import '../game.dart';
 import './enemy_component.dart';
+import '../game.dart';
 
-class BulletComponent extends SpriteAnimationComponent with HasGameRef<SpaceShooterGame>, Hitbox, Collidable {
-  static const bullet_speed = -500;
+class BulletComponent extends SpriteAnimationComponent
+    with HasGameRef<SpaceShooterGame>, CollisionCallbacks {
+  static const speed = 500.0;
+  late final Vector2 velocity;
+  final Vector2 deltaPosition = Vector2.zero();
 
-  bool destroyed = false;
-
-  double xDirection;
-
-  BulletComponent(double x, double y, { this.xDirection = 0.0 }): super(
-      position: Vector2(x, y),
-      size: Vector2(10, 20),
-  ) {
-    addShape(HitboxRectangle());
-  }
+  BulletComponent({required super.position, super.angle})
+      : super(size: Vector2(10, 20));
 
   @override
   Future<void> onLoad() async {
-    animation = await gameRef.loadSpriteAnimation('bullet.png', SpriteAnimationData.sequenced(
-      stepTime: 0.2,
-      amount: 4,
-      textureSize: Vector2(8, 16),
-    ));
+    add(CircleHitbox());
+    animation = await gameRef.loadSpriteAnimation(
+      'bullet.png',
+      SpriteAnimationData.sequenced(
+        stepTime: 0.2,
+        amount: 4,
+        textureSize: Vector2(8, 16),
+      ),
+    );
+    velocity = Vector2(0, -1)
+      ..rotate(angle)
+      ..scale(speed);
   }
 
   @override
-  void onCollision(Set<Vector2> points, Collidable other) {
+  void onCollisionStart(Set<Vector2> points, PositionComponent other) {
+    super.onCollisionStart(points, other);
     if (other is EnemyComponent) {
-      destroyed = true;
       other.takeHit();
+      removeFromParent();
     }
   }
 
   @override
   void update(double dt) {
     super.update(dt);
+    deltaPosition
+      ..setFrom(velocity)
+      ..scale(dt);
+    position += deltaPosition;
 
-    y += bullet_speed * dt;
-    if (xDirection != 0) {
-      x += bullet_speed * dt * xDirection;
+    if (position.y < 0 ||
+        position.x > gameRef.size.x ||
+        position.x + size.x < 0) {
+      removeFromParent();
     }
-
-    shouldRemove =  destroyed || toRect().bottom <= 0;
   }
 }

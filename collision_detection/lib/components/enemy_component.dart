@@ -1,49 +1,43 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/geometry.dart';
-
-import '../game.dart';
 
 import './explosion_component.dart';
+import '../game.dart';
 
-class EnemyComponent extends SpriteAnimationComponent with HasGameRef<SpaceShooterGame>, Hitbox, Collidable {
+class EnemyComponent extends SpriteAnimationComponent
+    with HasGameRef<SpaceShooterGame>, CollisionCallbacks {
+  static const speed = 150;
+  static Vector2 initialSize = Vector2.all(25);
 
-  static const enemy_speed = 150;
-
-  bool destroyed = false;
-
-  EnemyComponent(double x, double y): super(position: Vector2(x, y), size: Vector2.all(25)) {
-    addShape(HitboxRectangle());
-    collidableType = CollidableType.passive;
-  }
+  EnemyComponent({required super.position})
+      : super(size: initialSize, anchor: Anchor.center);
 
   @override
   Future<void> onLoad() async {
     animation = await gameRef.loadSpriteAnimation(
-        'enemy.png',
-        SpriteAnimationData.sequenced(
-            stepTime: 0.2,
-            amount: 4,
-            textureSize: Vector2.all(16),
-        ),
+      'enemy.png',
+      SpriteAnimationData.sequenced(
+        stepTime: 0.2,
+        amount: 4,
+        textureSize: Vector2.all(16),
+      ),
     );
-    collidableType = CollidableType.passive;
+    add(CircleHitbox()..collisionType = CollisionType.passive);
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-
-    y += enemy_speed * dt;
-    shouldRemove = destroyed || y >= gameRef.size.y;
+    y += speed * dt;
+    if (y >= gameRef.size.y) {
+      removeFromParent();
+    }
   }
-
 
   void takeHit() {
-    destroyed = true;
+    removeFromParent();
 
-    gameRef.add(ExplosionComponent(x - 25, y - 25));
+    gameRef.add(ExplosionComponent(position: position));
     gameRef.increaseScore();
   }
-
 }
-
