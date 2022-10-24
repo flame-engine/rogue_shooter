@@ -1,3 +1,3 @@
 # basic_sprite_test
 
-Simple project to test Flame perfomance regarding sprite rendering
+Simple project to test Flame performance regarding sprite rendering.

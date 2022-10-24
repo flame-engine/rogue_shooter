@@ -1,5 +1,5 @@
-name: rogue_shooter
-description: A new Flutter project.
+name: collision_detection_performance
+description: A simple game trying out collision detection performance.
 
 version: 1.0.0+1
 
@@ -9,15 +9,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flame:
-    path: ../../flame
+  flame: ^1.4.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 flutter:
-  uses-material-design: true
   assets:
     - assets/images/player.png
     - assets/images/enemy.png

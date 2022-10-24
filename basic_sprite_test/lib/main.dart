@@ -1,80 +1,73 @@
-import 'package:flame/game.dart';
-import 'package:flame/sprite.dart';
-import 'package:flutter/material.dart';
-
 import 'dart:math';
+
+import 'package:flame/components.dart';
+import 'package:flame/events.dart';
+import 'package:flame/game.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(GameWidget(game: MyGame()));
 }
 
-class Component {
-  final Vector2 position;
-  final Vector2 direction;
+final random = Random();
 
-  Component(this.position, this.direction);
-}
+class MovingSprite extends SpriteComponent with HasGameRef {
+  MovingSprite() : super(size: Vector2(100, 150));
 
-class MyGame extends Game with FPSCounter {
-  static final spriteSize = Vector2(100, 150);
-  static const speed = 100;
-
-  final debugTextconfig = TextConfig(color: Color(0xFFFFFFFF));
-
-  final fpsPos = Vector2(10, 10);
-  final objectsCountPos = Vector2(10, 30);
-
-  List<Component> components;
-  Sprite sprite;
+  static const speed = 100.0;
+  late final Vector2 direction;
+  final Vector2 deltaPosition = Vector2.zero();
 
   @override
   Future<void> onLoad() async {
-    final random = Random();
-    final screenVector = Vector2(
-      (size.x - spriteSize.x),
-      (size.y - spriteSize.y),
+    sprite = await gameRef.loadSprite('ship.png');
+    position = Vector2.random()..multiply(gameRef.size - size);
+    direction = Vector2(
+      random.nextBool() ? 1 : -1,
+      random.nextBool() ? 1 : -1,
     );
-    components = List.generate(3000, (_) {
-      return Component(
-        Vector2.random()..multiply(screenVector),
-        Vector2(
-          random.nextBool() ? 1 : -1,
-          random.nextBool() ? 1 : -1,
-        ),
-      );
-    });
-
-    sprite = await loadSprite('ship.png');
   }
 
   @override
   void update(double dt) {
-    components.forEach((component) {
-      final ammount = speed * dt;
-      component.position.add(component.direction * ammount);
+    deltaPosition
+      ..setFrom(direction)
+      ..scale(speed * dt);
+    position.add(deltaPosition);
+    if ((position.x < 0 && direction.x < 0) ||
+        (position.x + size.x > gameRef.size.x && direction.x > 0)) {
+      direction.x *= -1;
+    }
 
-      if ((component.position.x < 0 && component.direction.x < 0) ||
-          (component.position.x + spriteSize.x > size.x &&
-              component.direction.x > 0)) {
-        component.direction.x *= -1;
-      }
+    if ((position.y < 0 && direction.y < 0) ||
+        (position.y + size.y > gameRef.size.y && direction.y > 0)) {
+      direction.y *= -1;
+    }
+  }
+}
 
-      if ((component.position.y < 0 && component.direction.y < 0) ||
-          (component.position.y + spriteSize.y > size.y &&
-              component.direction.y > 0)) {
-        component.direction.y *= -1;
-      }
-    });
+class MyGame extends FlameGame with TapDetector {
+  late final TextComponent componentCounter;
+
+  @override
+  Future<void> onLoad() async {
+    add(FpsTextComponent());
+    add(
+      componentCounter = TextComponent(
+        position: size,
+        anchor: Anchor.bottomRight,
+      ),
+    );
   }
 
   @override
-  void render(Canvas canvas) {
-    components.forEach((component) {
-      sprite.render(canvas, position: component.position, size: spriteSize);
-    });
+  void update(double dt) {
+    super.update(dt);
+    componentCounter.text = 'Components: ${children.length - 2}';
+  }
 
-    debugTextconfig.render(canvas, fps(120).toString(), fpsPos);
-    debugTextconfig.render(
-        canvas, 'Objects: ${components.length}', objectsCountPos);
+  @override
+  void onTap() {
+    addAll(List.generate(1000, (_) => MovingSprite()));
   }
 }
