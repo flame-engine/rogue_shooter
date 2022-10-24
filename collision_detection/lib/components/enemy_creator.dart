@@ -1,35 +1,26 @@
-import 'package:flame/components.dart';
-import 'package:flame/timer.dart';
-
-import 'dart:ui';
 import 'dart:math';
 
-import '../game.dart';
+import 'package:collision_detection_performance/components/enemy_component.dart';
+import 'package:flame/components.dart';
 
-import './enemy_component.dart';
+class EnemyCreator extends TimerComponent with HasGameRef {
+  final Random random = Random();
+  final _halfWidth = EnemyComponent.initialSize.x / 2;
 
-class EnemyCreator extends Component with HasGameRef<SpaceShooterGame>{
-
-  Timer enemyCreator;
-
-  Random random = Random();
-
-  EnemyCreator() {
-    enemyCreator = Timer(0.05, repeat: true, callback: () {
-      gameRef.add(EnemyComponent((gameRef.size.x - 25) * random.nextDouble(), 0));
-      gameRef.add(EnemyComponent((gameRef.size.x - 25) * random.nextDouble(), 0));
-      gameRef.add(EnemyComponent((gameRef.size.x - 25) * random.nextDouble(), 0));
-      gameRef.add(EnemyComponent((gameRef.size.x - 25) * random.nextDouble(), 0));
-      gameRef.add(EnemyComponent((gameRef.size.x - 25) * random.nextDouble(), 0));
-    });
-    enemyCreator.start();
-  }
+  EnemyCreator() : super(period: 0.05, repeat: true);
 
   @override
-  void update(double dt) {
-    enemyCreator.update(dt);
+  void onTick() {
+    gameRef.addAll(
+      List.generate(
+        5,
+        (index) => EnemyComponent(
+          position: Vector2(
+            _halfWidth + (gameRef.size.x - _halfWidth) * random.nextDouble(),
+            0,
+          ),
+        ),
+      ),
+    );
   }
-
-  @override
-  void render(Canvas canvas) { }
 }
