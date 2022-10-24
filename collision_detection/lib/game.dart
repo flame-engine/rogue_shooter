@@ -1,10 +1,9 @@
+import 'package:collision_detection_performance/components/enemy_creator.dart';
+import 'package:collision_detection_performance/components/player_component.dart';
+import 'package:collision_detection_performance/components/star_background_creator.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-
-import './components/enemy_creator.dart';
-import './components/player_component.dart';
-import './components/star_background_creator.dart';
 
 class SpaceShooterGame extends FlameGame
     with PanDetector, HasCollisionDetection {

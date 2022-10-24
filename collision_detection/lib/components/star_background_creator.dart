@@ -1,10 +1,9 @@
 import 'dart:math';
 
+import 'package:collision_detection_performance/components/star_component.dart';
+import 'package:collision_detection_performance/game.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
-
-import './star_component.dart';
-import '../game.dart';
 
 class StarBackGroundCreator extends Component
     with HasGameRef<SpaceShooterGame> {
@@ -18,7 +17,7 @@ class StarBackGroundCreator extends Component
   @override
   Future<void> onLoad() async {
     spriteSheet = SpriteSheet.fromColumnsAndRows(
-      image: await gameRef.images.load("stars.png"),
+      image: await gameRef.images.load('stars.png'),
       rows: 4,
       columns: 4,
     );
@@ -29,7 +28,7 @@ class StarBackGroundCreator extends Component
       period: starGapTime,
       repeat: true,
       onTick: () => _createRowOfStars(0),
-    ));
+    ),);
 
     _createInitialStars();
   }
@@ -44,18 +43,18 @@ class StarBackGroundCreator extends Component
     gameRef.add(StarComponent(animation: animation, position: Vector2(x, y)));
   }
 
-  _createRowOfStars(double y) {
-    final gapSize = 6;
-    double starGap = gameRef.size.x / gapSize;
+  void _createRowOfStars(double y) {
+    const gapSize = 6;
+    final starGap = gameRef.size.x / gapSize;
 
     for (var i = 0; i < gapSize; i++) {
       _createStarAt(starGap * i + (random.nextDouble() * starGap),
-          y + (random.nextDouble() * 20));
+          y + (random.nextDouble() * 20),);
     }
   }
 
   void _createInitialStars() {
-    double rows = gameRef.size.y / gapSize;
+    final rows = gameRef.size.y / gapSize;
 
     for (var i = 0; i < gapSize; i++) {
       _createRowOfStars(i * rows);

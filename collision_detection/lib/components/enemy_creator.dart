@@ -1,8 +1,7 @@
 import 'dart:math';
 
+import 'package:collision_detection_performance/components/enemy_component.dart';
 import 'package:flame/components.dart';
-
-import './enemy_component.dart';
 
 class EnemyCreator extends TimerComponent with HasGameRef {
   final Random random = Random();
@@ -12,14 +11,16 @@ class EnemyCreator extends TimerComponent with HasGameRef {
 
   @override
   void onTick() {
-    gameRef.addAll(List.generate(
-      5,
-      (index) => EnemyComponent(
-        position: Vector2(
-          _halfWidth + (gameRef.size.x - _halfWidth) * random.nextDouble(),
-          0,
+    gameRef.addAll(
+      List.generate(
+        5,
+        (index) => EnemyComponent(
+          position: Vector2(
+            _halfWidth + (gameRef.size.x - _halfWidth) * random.nextDouble(),
+            0,
+          ),
         ),
       ),
-    ));
+    );
   }
 }

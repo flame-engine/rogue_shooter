@@ -50,6 +50,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.0"
+  flame_lint:
+    dependency: "direct dev"
+    description:
+      name: flame_lint
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.3"
   flutter:
     dependency: "direct main"
     description: flutter

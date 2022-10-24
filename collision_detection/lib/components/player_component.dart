@@ -1,10 +1,9 @@
+import 'package:collision_detection_performance/components/bullet_component.dart';
+import 'package:collision_detection_performance/components/enemy_component.dart';
+import 'package:collision_detection_performance/components/explosion_component.dart';
+import 'package:collision_detection_performance/game.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-
-import './bullet_component.dart';
-import './explosion_component.dart';
-import '../game.dart';
-import 'enemy_component.dart';
 
 class PlayerComponent extends SpriteAnimationComponent
     with HasGameRef<SpaceShooterGame>, CollisionCallbacks {
@@ -20,18 +19,20 @@ class PlayerComponent extends SpriteAnimationComponent
   @override
   Future<void> onLoad() async {
     add(CircleHitbox());
-    add(bulletCreator = TimerComponent(
-      period: 0.05,
-      repeat: true,
-      autoStart: false,
-      onTick: _createBullet,
-    ));
+    add(
+      bulletCreator = TimerComponent(
+        period: 0.05,
+        repeat: true,
+        autoStart: false,
+        onTick: _createBullet,
+      ),
+    );
     animation = await gameRef.loadSpriteAnimation(
       'player.png',
       SpriteAnimationData.sequenced(
         stepTime: 0.2,
         amount: 4,
-        textureSize: Vector2(32, 48),
+        textureSize: Vector2(32, 39),
       ),
     );
   }
